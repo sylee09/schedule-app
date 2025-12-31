@@ -8,10 +8,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.zerock.scheduleapp.dto.ScheduleRequestDTO;
 import org.zerock.scheduleapp.dto.ScheduleResponseDTO;
+import org.zerock.scheduleapp.exception.NotExistException;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.*;
 
 @Transactional
@@ -56,5 +58,20 @@ class ScheduleServiceTest {
         assertThat(lee.size()).isEqualTo(3);
 
         assertThat(lee.get(0).getContent()).isEqualTo("테스트3");
+    }
+
+    @DisplayName("스케줄 id 기준 조회")
+    @Test
+    public void findScheduleById() {
+        ScheduleRequestDTO scheduleRequestDTO1 = new ScheduleRequestDTO();
+        scheduleRequestDTO1.setAuthor("lee");
+        scheduleRequestDTO1.setContent("테스트1");
+        ScheduleResponseDTO scheduleResponseDTO = scheduleService.addSchedule(scheduleRequestDTO1);
+
+        ScheduleResponseDTO found = scheduleService.viewScheduleById(scheduleResponseDTO.getId());
+
+        assertThat(found).isEqualTo(scheduleResponseDTO);
+
+        assertThatThrownBy(() -> scheduleService.viewScheduleById(10L)).isExactlyInstanceOf(NotExistException.class);
     }
 }

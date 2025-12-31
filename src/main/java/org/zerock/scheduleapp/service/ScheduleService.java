@@ -1,11 +1,13 @@
 package org.zerock.scheduleapp.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.zerock.scheduleapp.dto.ScheduleRequestDTO;
 import org.zerock.scheduleapp.dto.ScheduleResponseDTO;
 import org.zerock.scheduleapp.entity.Schedule;
+import org.zerock.scheduleapp.exception.NotExistException;
 import org.zerock.scheduleapp.repository.ScheduleRepo;
 
 import java.util.List;
@@ -28,6 +30,11 @@ public class ScheduleService {
         return byAuthor.stream().map(a -> new ScheduleResponseDTO(
                 a.getId(), a.getTitle(), a.getContent(), a.getAuthor(), a.getCreatedAt(), a.getUpdatedAt()
         )).toList();
+    }
+
+    public ScheduleResponseDTO viewScheduleById(Long id) {
+        Schedule found = scheduleRepo.findById(id).orElseThrow(() -> new NotExistException("Schedule Not Found"));
+        return new ScheduleResponseDTO(found.getId(), found.getTitle(), found.getContent(), found.getAuthor(), found.getCreatedAt(), found.getUpdatedAt());
     }
 
 }
