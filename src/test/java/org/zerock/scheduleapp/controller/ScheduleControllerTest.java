@@ -36,4 +36,18 @@ class ScheduleControllerTest {
         assertThat(scheduleResponseDTO.getAuthor()).isEqualTo("테스터");
         assertThat(scheduleResponseDTO.getCreatedAt()).isEqualTo(scheduleResponseDTO.getLastUpdatedAt());
     }
+
+    @Test
+    void getSchedule() {
+        ScheduleRequestDTO scheduleRequestDTO = new ScheduleRequestDTO();
+        scheduleRequestDTO.setTitle("테스트1");
+        scheduleRequestDTO.setContent("테스트");
+        scheduleRequestDTO.setAuthor("테스터");
+        scheduleRequestDTO.setPassword("123456");
+
+        ScheduleResponseDTO scheduleResponseDTO = controller.addSchedule(scheduleRequestDTO);
+
+        ScheduleResponseDTO schedule = controller.getSchedule(scheduleResponseDTO.getId());
+        assertThat(schedule).isEqualTo(scheduleResponseDTO);
+    }
 }

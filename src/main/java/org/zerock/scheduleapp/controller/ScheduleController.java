@@ -2,9 +2,7 @@ package org.zerock.scheduleapp.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.zerock.scheduleapp.dto.ScheduleRequestDTO;
 import org.zerock.scheduleapp.dto.ScheduleResponseDTO;
 import org.zerock.scheduleapp.entity.Schedule;
@@ -21,4 +19,8 @@ public class ScheduleController {
         return service.addSchedule(schedule);
     }
 
+    @GetMapping("/schedules/{id}")
+    public ScheduleResponseDTO getSchedule(@PathVariable Long id) {
+        return service.viewScheduleById(id);
+    }
 }
