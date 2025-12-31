@@ -55,4 +55,9 @@ public class ScheduleService {
         return pwd.equals(password);
     }
 
+    @Transactional
+    public void deleteSchedule(Long id){
+        scheduleRepo.deleteById(id);
+    }
+
 }

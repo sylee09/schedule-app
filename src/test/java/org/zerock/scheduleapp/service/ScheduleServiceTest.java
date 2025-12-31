@@ -96,4 +96,11 @@ class ScheduleServiceTest {
         assertThat(updatedSchedule.getTitle()).isEqualTo("update");
         assertThat(updatedSchedule.getLastUpdatedAt()).isAfter(lastUpdated);
     }
+
+    @DisplayName("스케줄 삭제 메소드 테스트")
+    @Test
+    public void deleteSchedule() {
+        scheduleService.deleteSchedule(scheduleResponseDTO1.getId());
+        assertThatThrownBy(()->scheduleService.viewScheduleById(scheduleResponseDTO1.getId())).isExactlyInstanceOf(NotExistException.class);
+    }
 }
