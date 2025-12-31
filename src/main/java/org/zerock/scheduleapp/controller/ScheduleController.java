@@ -2,6 +2,7 @@ package org.zerock.scheduleapp.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.zerock.scheduleapp.dto.ScheduleDeleteDTO;
 import org.zerock.scheduleapp.dto.ScheduleRequestDTO;
@@ -18,7 +19,7 @@ public class ScheduleController {
     private final ScheduleService service;
 
     @PostMapping("/schedules")
-    public ScheduleResponseDTO addSchedule(@RequestBody ScheduleRequestDTO schedule) {
+    public ScheduleResponseDTO addSchedule(@RequestBody @Validated ScheduleRequestDTO schedule) {
         return service.addSchedule(schedule);
     }
 
@@ -28,7 +29,7 @@ public class ScheduleController {
     }
 
     @PatchMapping("/schedules/{id}")
-    public ScheduleResponseDTO updateSchedule(@PathVariable Long id, @RequestBody ScheduleUpdateDTO updateDTO) {
+    public ScheduleResponseDTO updateSchedule(@PathVariable Long id, @RequestBody @Validated ScheduleUpdateDTO updateDTO) {
         if (service.checkValidPassword(id, updateDTO.getPassword())) {
             return service.updateSchedule(id, updateDTO);
         } else {
@@ -37,7 +38,7 @@ public class ScheduleController {
     }
 
     @DeleteMapping("/schedules/{id}")
-    public void deleteSchedule(@PathVariable Long id, @RequestBody ScheduleDeleteDTO deleteDTO) {
+    public void deleteSchedule(@PathVariable Long id, @RequestBody @Validated ScheduleDeleteDTO deleteDTO) {
         if (service.checkValidPassword(id, deleteDTO.getPassword())) {
             service.deleteSchedule(id);
         } else {

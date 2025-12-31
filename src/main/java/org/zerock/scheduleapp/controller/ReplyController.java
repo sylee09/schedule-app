@@ -1,6 +1,7 @@
 package org.zerock.scheduleapp.controller;
 
 import lombok.AllArgsConstructor;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,7 +19,7 @@ public class ReplyController {
     private final ReplyService replyService;
 
     @PostMapping("/replies/{id}")
-    public ReplyResponseDTO addReply(@PathVariable Long id, @RequestBody ReplyRequestDTO replyRequestDTO) {
+    public ReplyResponseDTO addReply(@PathVariable Long id, @RequestBody @Validated ReplyRequestDTO replyRequestDTO) {
         if (replyService.isPossibleToAddReply(id)) {
             return replyService.addReply(replyRequestDTO, id);
         } else {
