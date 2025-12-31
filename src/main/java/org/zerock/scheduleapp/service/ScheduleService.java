@@ -1,5 +1,6 @@
 package org.zerock.scheduleapp.service;
 
+import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
@@ -43,8 +44,15 @@ public class ScheduleService {
         Schedule found = scheduleRepo.findById(id).orElseThrow(() -> new NotExistException("Schedule Not Found"));
         found.setAuthor(dto.getAuthor());
         found.setTitle(dto.getTitle());
-
+        // EntityManager를 직접 받아서 em.flush(), em.clear() 하는 것은 위험하므로 이 방법을 채택
+        scheduleRepo.saveAndFlush(found);
         return new ScheduleResponseDTO(found.getId(), found.getTitle(), found.getContent(), found.getAuthor(), found.getCreatedAt(), found.getUpdatedAt());
+    }
+
+    public boolean checkValidPassword(Long id, String password){
+        Schedule found = scheduleRepo.findById(id).orElseThrow(() -> new NotExistException("Schedule Not Found"));
+        String pwd = found.getPassword();
+        return pwd.equals(password);
     }
 
 }

@@ -96,13 +96,9 @@ class ScheduleServiceTest {
         scheduleUpdateDTO.setTitle("update");
 
         ScheduleResponseDTO updatedSchedule = scheduleService.updateSchedule(scheduleResponseDTO.getId(), scheduleUpdateDTO);
-        em.flush();
-        em.clear();
 
-        ScheduleResponseDTO finalUpdated = scheduleService.viewScheduleById(updatedSchedule.getId());
-
-        assertThat(finalUpdated.getAuthor()).isEqualTo("park");
-        assertThat(finalUpdated.getTitle()).isEqualTo("update");
-        assertThat(finalUpdated.getLastUpdatedAt()).isAfter(lastUpdated);
+        assertThat(updatedSchedule.getAuthor()).isEqualTo("park");
+        assertThat(updatedSchedule.getTitle()).isEqualTo("update");
+        assertThat(updatedSchedule.getLastUpdatedAt()).isAfter(lastUpdated);
     }
 }

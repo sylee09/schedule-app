@@ -5,7 +5,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.zerock.scheduleapp.dto.ScheduleRequestDTO;
 import org.zerock.scheduleapp.dto.ScheduleResponseDTO;
+import org.zerock.scheduleapp.dto.ScheduleUpdateDTO;
 import org.zerock.scheduleapp.entity.Schedule;
+import org.zerock.scheduleapp.exception.LoginException;
 import org.zerock.scheduleapp.service.ScheduleService;
 
 @RestController
@@ -22,5 +24,14 @@ public class ScheduleController {
     @GetMapping("/schedules/{id}")
     public ScheduleResponseDTO getSchedule(@PathVariable Long id) {
         return service.viewScheduleById(id);
+    }
+
+    @PatchMapping("/schedules/{id}")
+    public ScheduleResponseDTO updateSchedule(@PathVariable Long id, @RequestBody ScheduleUpdateDTO updateDTO) {
+        if (service.checkValidPassword(id, updateDTO.getPassword())) {
+            return service.updateSchedule(id, updateDTO);
+        } else {
+            throw new LoginException("Wrong Password");
+        }
     }
 }
