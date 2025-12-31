@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.zerock.scheduleapp.dto.ScheduleRequestDTO;
 import org.zerock.scheduleapp.dto.ScheduleResponseDTO;
+import org.zerock.scheduleapp.dto.ScheduleUpdateDTO;
 import org.zerock.scheduleapp.entity.Schedule;
 import org.zerock.scheduleapp.exception.NotExistException;
 import org.zerock.scheduleapp.repository.ScheduleRepo;
@@ -34,6 +35,15 @@ public class ScheduleService {
 
     public ScheduleResponseDTO viewScheduleById(Long id) {
         Schedule found = scheduleRepo.findById(id).orElseThrow(() -> new NotExistException("Schedule Not Found"));
+        return new ScheduleResponseDTO(found.getId(), found.getTitle(), found.getContent(), found.getAuthor(), found.getCreatedAt(), found.getUpdatedAt());
+    }
+
+    @Transactional
+    public ScheduleResponseDTO updateSchedule(Long id, ScheduleUpdateDTO dto) {
+        Schedule found = scheduleRepo.findById(id).orElseThrow(() -> new NotExistException("Schedule Not Found"));
+        found.setAuthor(dto.getAuthor());
+        found.setTitle(dto.getTitle());
+
         return new ScheduleResponseDTO(found.getId(), found.getTitle(), found.getContent(), found.getAuthor(), found.getCreatedAt(), found.getUpdatedAt());
     }
 
