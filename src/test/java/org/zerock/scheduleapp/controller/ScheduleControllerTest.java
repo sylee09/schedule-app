@@ -6,6 +6,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.zerock.scheduleapp.dto.ScheduleDeleteDTO;
 import org.zerock.scheduleapp.dto.ScheduleRequestDTO;
 import org.zerock.scheduleapp.dto.ScheduleResponseDTO;
 import org.zerock.scheduleapp.dto.ScheduleUpdateDTO;
@@ -15,6 +16,7 @@ import org.zerock.scheduleapp.exception.NotExistException;
 import java.time.LocalDateTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
@@ -62,5 +64,17 @@ class ScheduleControllerTest {
 
         scheduleUpdateDTO.setPassword("1111");
         Assertions.assertThatThrownBy(() -> controller.updateSchedule(scheduleResponseDTO.getId(), scheduleUpdateDTO)).isExactlyInstanceOf(LoginException.class);
+    }
+
+    @Test
+    void deleteSchedule() {
+        ScheduleDeleteDTO scheduleDeleteDTO = new ScheduleDeleteDTO();
+        scheduleDeleteDTO.setPassword("1111");
+        assertThatThrownBy(() -> controller.deleteSchedule(scheduleResponseDTO.getId(), scheduleDeleteDTO)).isExactlyInstanceOf(LoginException.class);
+
+        scheduleDeleteDTO.setPassword("123456");
+        controller.deleteSchedule(scheduleResponseDTO.getId(), scheduleDeleteDTO);
+
+        assertThatThrownBy(() -> controller.getSchedule(scheduleResponseDTO.getId())).isExactlyInstanceOf(NotExistException.class);
     }
 }
