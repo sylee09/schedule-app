@@ -27,4 +27,9 @@ public class ReplyService {
         Reply save = replyRepo.save(reply);
         return new ReplyResponseDTO(save.getId(), save.getContent(), save.getAuthor(), save.getCreatedAt(), save.getUpdatedAt());
     }
+
+    public boolean isPossibleToAddReply(Long scheduleId) {
+        Long cnt = replyRepo.countByScheduleId(scheduleId);
+        return cnt < 10;
+    }
 }
