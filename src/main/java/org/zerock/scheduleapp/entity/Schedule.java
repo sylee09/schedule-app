@@ -29,7 +29,9 @@ public class Schedule extends BaseEntity{
 
     private String password;
 
-    @OneToMany(mappedBy = "schedule")
+    @OneToMany(mappedBy = "schedule",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true)
     private List<Reply> replies = new ArrayList<>();
 
     public Schedule(String title, String content, String author, String password) {

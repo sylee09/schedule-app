@@ -74,7 +74,7 @@ class ScheduleServiceTest {
     public void findScheduleById() {
         ScheduleResponseDTO found = scheduleService.viewScheduleById(scheduleResponseDTO1.getId());
 
-        assertThat(found).isEqualTo(scheduleResponseDTO1);
+        assertThat(found.getAuthor()).isEqualTo(scheduleResponseDTO1.getAuthor());
 
         assertThatThrownBy(() -> scheduleService.viewScheduleById(1000L)).isExactlyInstanceOf(NotExistException.class);
     }

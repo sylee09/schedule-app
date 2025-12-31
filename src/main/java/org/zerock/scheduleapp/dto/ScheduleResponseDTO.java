@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -18,6 +19,8 @@ public class ScheduleResponseDTO {
     private String content;
 
     private String author;
+
+    private List<ReplyResponseDTO> replies;
 
     private LocalDateTime createdAt;
     private LocalDateTime lastUpdatedAt;
