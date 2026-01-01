@@ -13,6 +13,7 @@ import org.zerock.scheduleapp.exception.NotExistException;
 import org.zerock.scheduleapp.service.ScheduleService;
 
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -35,6 +36,17 @@ public class ScheduleController {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(scheduleResponseDTO);
+    }
+
+    @GetMapping("/schedules")
+    public ResponseEntity<List<ScheduleResponseDTO>> getAllSchedules(@RequestParam(required = false) String author) {
+        if (author == null) {
+            List<ScheduleResponseDTO> allSchedules = service.findAllSchedules();
+            return ResponseEntity.ok(allSchedules);
+        } else {
+            List<ScheduleResponseDTO> allSchedulesByAuthor = service.findAllSchedulesByAuthor(author);
+            return ResponseEntity.ok(allSchedulesByAuthor);
+        }
     }
 
     @PatchMapping("/schedules/{id}")

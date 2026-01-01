@@ -33,12 +33,34 @@ public class ScheduleService {
     }
 
     public List<ScheduleResponseDTO> findAllSchedulesByAuthor(String author){
-        List<Schedule> byAuthor = scheduleRepo.findByAuthor(author);
-        List<ReplyResponseDTO> replies = new ArrayList<>();
-        for(Schedule s:byAuthor){
-            replies.add(new ReplyResponseDTO(s.getId(), s.getContent(), s.getAuthor(), s.getCreatedAt(), s.getUpdatedAt()));
-        }
-        return byAuthor.stream().map(s -> new ScheduleResponseDTO(s.getId(), s.getTitle(), s.getContent(), s.getAuthor(), replies, s.getCreatedAt(), s.getUpdatedAt())).toList();
+        return scheduleRepo.findByAuthor(author)
+                .stream()
+                .map(s -> {
+                    List<ReplyResponseDTO> replies = s.getReplies()
+                            .stream()
+                            .map(r -> new ReplyResponseDTO(r.getId(), r.getContent(), r.getAuthor(), r.getCreatedAt(), r.getUpdatedAt()))
+                            .toList();
+                    return new ScheduleResponseDTO(s.getId(), s.getTitle(), s.getContent(), s.getAuthor(), replies, s.getCreatedAt(), s.getUpdatedAt());
+                }).toList();
+    }
+
+    public List<ScheduleResponseDTO> findAllSchedules() {
+        return scheduleRepo.findAll()
+                .stream().map(s -> {
+                    List<ReplyResponseDTO> replies = s.getReplies().stream()
+                            .map(r -> new ReplyResponseDTO(r.getId(), r.getContent(), r.getAuthor(), r.getCreatedAt(), r.getUpdatedAt()))
+                            .toList();
+
+                    return new ScheduleResponseDTO(
+                            s.getId(),
+                            s.getTitle(),
+                            s.getContent(),
+                            s.getAuthor(),
+                            replies,
+                            s.getCreatedAt(),
+                            s.getUpdatedAt()
+                    );
+                }).toList();
     }
 
     public ScheduleResponseDTO viewScheduleById(Long id) {
