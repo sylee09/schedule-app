@@ -35,22 +35,26 @@ public class ScheduleService {
     public List<ScheduleResponseDTO> findAllSchedulesByAuthor(String author){
         return scheduleRepo.findByAuthor(author)
                 .stream()
+                // reply를 ReplyResponseDTO로 변환
                 .map(s -> {
                     List<ReplyResponseDTO> replies = s.getReplies()
                             .stream()
                             .map(r -> new ReplyResponseDTO(r.getId(), r.getContent(), r.getAuthor(), r.getCreatedAt(), r.getUpdatedAt()))
                             .toList();
+                    // 변환된 reply를 ScheduleResponseDTO에 넣는다.
                     return new ScheduleResponseDTO(s.getId(), s.getTitle(), s.getContent(), s.getAuthor(), replies, s.getCreatedAt(), s.getUpdatedAt());
                 }).toList();
     }
 
     public List<ScheduleResponseDTO> findAllSchedules() {
         return scheduleRepo.findAll()
+                // reply를 ReplyResponseDTO로 변환
                 .stream().map(s -> {
                     List<ReplyResponseDTO> replies = s.getReplies().stream()
                             .map(r -> new ReplyResponseDTO(r.getId(), r.getContent(), r.getAuthor(), r.getCreatedAt(), r.getUpdatedAt()))
                             .toList();
 
+                    // 변환된 reply를 ScheduleResponseDTO에 넣는다.
                     return new ScheduleResponseDTO(
                             s.getId(),
                             s.getTitle(),
