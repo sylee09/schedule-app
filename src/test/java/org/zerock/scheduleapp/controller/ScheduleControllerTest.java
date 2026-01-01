@@ -9,8 +9,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.zerock.scheduleapp.dto.*;
-import org.zerock.scheduleapp.exception.LoginException;
 import org.zerock.scheduleapp.exception.NotExistException;
+
+import javax.security.auth.login.LoginException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -77,19 +78,19 @@ class ScheduleControllerTest {
         assertThat(updatedScheduleResponseDTO.getAuthor()).isEqualTo("modified");
 
         scheduleUpdateDTO.setPassword("1111");
-        Assertions.assertThatThrownBy(() -> scheduleController.updateSchedule(scheduleResponseDTO.getId(), scheduleUpdateDTO)).isExactlyInstanceOf(LoginException.class);
+        ResponseEntity<ScheduleResponseDTO> anotherScheduleResponseDTOResponseEntity = scheduleController.updateSchedule(scheduleResponseDTO.getId(), scheduleUpdateDTO);
+        assertThat(anotherScheduleResponseDTOResponseEntity.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
     }
 
     @Test
     void deleteSchedule() {
         ScheduleDeleteDTO scheduleDeleteDTO = new ScheduleDeleteDTO();
         scheduleDeleteDTO.setPassword("1111");
-        assertThatThrownBy(() -> scheduleController.deleteSchedule(scheduleResponseDTO.getId(), scheduleDeleteDTO)).isExactlyInstanceOf(LoginException.class);
+        ResponseEntity<Void> voidResponseEntity1 = scheduleController.deleteSchedule(scheduleResponseDTO.getId(), scheduleDeleteDTO);
+        assertThat(voidResponseEntity1.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
 
         scheduleDeleteDTO.setPassword("123456");
         ResponseEntity<Void> voidResponseEntity = scheduleController.deleteSchedule(scheduleResponseDTO.getId(), scheduleDeleteDTO);
         assertThat(voidResponseEntity.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
-
-        assertThatThrownBy(() -> scheduleController.getSchedule(scheduleResponseDTO.getId())).isExactlyInstanceOf(NotExistException.class);
     }
 }

@@ -1,7 +1,6 @@
 package org.zerock.scheduleapp.controller;
 
 import jakarta.transaction.Transactional;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,11 +11,9 @@ import org.zerock.scheduleapp.dto.ReplyRequestDTO;
 import org.zerock.scheduleapp.dto.ReplyResponseDTO;
 import org.zerock.scheduleapp.dto.ScheduleRequestDTO;
 import org.zerock.scheduleapp.dto.ScheduleResponseDTO;
-import org.zerock.scheduleapp.exception.RepliesLimitException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Transactional
@@ -67,6 +64,7 @@ class ReplyControllerTest {
         replyRequestDTO.setContent("test");
         replyRequestDTO.setAuthor("test");
         replyRequestDTO.setPassword("test");
-        assertThatThrownBy(() -> replyController.addReply(scheduleResponseDTO.getId(), replyRequestDTO)).isExactlyInstanceOf(RepliesLimitException.class);
+        ResponseEntity<ReplyResponseDTO> replyResponseDTOResponseEntity = replyController.addReply(scheduleResponseDTO.getId(), replyRequestDTO);
+        assertThat(replyResponseDTOResponseEntity.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
     }
 }
