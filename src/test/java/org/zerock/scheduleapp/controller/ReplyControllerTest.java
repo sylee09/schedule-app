@@ -6,6 +6,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.zerock.scheduleapp.dto.ReplyRequestDTO;
 import org.zerock.scheduleapp.dto.ReplyResponseDTO;
 import org.zerock.scheduleapp.dto.ScheduleRequestDTO;
@@ -33,7 +35,8 @@ class ReplyControllerTest {
         scheduleRequestDTO.setTitle("test");
         scheduleRequestDTO.setContent("test");
         scheduleRequestDTO.setPassword("test");
-        scheduleResponseDTO = scheduleController.addSchedule(scheduleRequestDTO);
+        ResponseEntity<ScheduleResponseDTO> scheduleResponseDTOResponseEntity = scheduleController.addSchedule(scheduleRequestDTO);
+        scheduleResponseDTO = scheduleResponseDTOResponseEntity.getBody();
     }
 
     @Test
@@ -43,9 +46,10 @@ class ReplyControllerTest {
         replyRequestDTO.setAuthor("test");
         replyRequestDTO.setPassword("test");
 
-        ReplyResponseDTO replyResponseDTO = replyController.addReply(scheduleResponseDTO.getId(), replyRequestDTO);
-        assertThat(replyResponseDTO).isNotNull();
-        assertThat(replyResponseDTO.getAuthor()).isEqualTo("test");
+        ResponseEntity<ReplyResponseDTO> replyResponseDTOResponseEntity = replyController.addReply(scheduleResponseDTO.getId(), replyRequestDTO);
+        assertThat(replyResponseDTOResponseEntity).isNotNull();
+        assertThat(replyResponseDTOResponseEntity.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+        assertThat(replyResponseDTOResponseEntity.getBody().getAuthor()).isEqualTo("test");
     }
 
     @Test

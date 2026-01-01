@@ -6,6 +6,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.zerock.scheduleapp.dto.*;
 import org.zerock.scheduleapp.exception.LoginException;
 import org.zerock.scheduleapp.exception.NotExistException;
@@ -31,7 +33,8 @@ class ScheduleControllerTest {
         scheduleRequestDTO.setContent("테스트");
         scheduleRequestDTO.setAuthor("테스터");
         scheduleRequestDTO.setPassword("123456");
-        scheduleResponseDTO = scheduleController.addSchedule(scheduleRequestDTO);
+        ResponseEntity<ScheduleResponseDTO> scheduleResponseDTOResponseEntity = scheduleController.addSchedule(scheduleRequestDTO);
+        scheduleResponseDTO = scheduleResponseDTOResponseEntity.getBody();
 
         ReplyRequestDTO replyRequestDTO = new ReplyRequestDTO();
         replyRequestDTO.setContent("test");
@@ -52,10 +55,13 @@ class ScheduleControllerTest {
 
     @Test
     void getSchedule() {
-        ScheduleResponseDTO schedule = scheduleController.getSchedule(scheduleResponseDTO.getId());
-        assertThat(schedule.getAuthor()).isEqualTo(scheduleResponseDTO.getAuthor());
-        assertThat(schedule.getReplies().size()).isEqualTo(1);
-        assertThat(schedule.getReplies().get(0).getAuthor()).isEqualTo("test");
+        ResponseEntity<ScheduleResponseDTO> scheduleResponseDTOResponseEntity = scheduleController.getSchedule(scheduleResponseDTO.getId());
+        ScheduleResponseDTO scheduleResponseDTO = scheduleResponseDTOResponseEntity.getBody();
+
+        assertThat(scheduleResponseDTO.getAuthor()).isEqualTo(scheduleResponseDTO.getAuthor());
+        assertThat(scheduleResponseDTO.getReplies().size()).isEqualTo(1);
+        assertThat(scheduleResponseDTO.getReplies().get(0).getAuthor()).isEqualTo("test");
+        assertThat(scheduleResponseDTOResponseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
 
     @Test
@@ -64,9 +70,11 @@ class ScheduleControllerTest {
         scheduleUpdateDTO.setTitle("modified");
         scheduleUpdateDTO.setAuthor("modified");
         scheduleUpdateDTO.setPassword("123456");
-        ScheduleResponseDTO updatedSchedule = scheduleController.updateSchedule(scheduleResponseDTO.getId(), scheduleUpdateDTO);
-        assertThat(updatedSchedule.getTitle()).isEqualTo("modified");
-        assertThat(updatedSchedule.getAuthor()).isEqualTo("modified");
+        ResponseEntity<ScheduleResponseDTO> scheduleResponseDTOResponseEntity = scheduleController.updateSchedule(scheduleResponseDTO.getId(), scheduleUpdateDTO);
+        ScheduleResponseDTO updatedScheduleResponseDTO = scheduleResponseDTOResponseEntity.getBody();
+
+        assertThat(updatedScheduleResponseDTO.getTitle()).isEqualTo("modified");
+        assertThat(updatedScheduleResponseDTO.getAuthor()).isEqualTo("modified");
 
         scheduleUpdateDTO.setPassword("1111");
         Assertions.assertThatThrownBy(() -> scheduleController.updateSchedule(scheduleResponseDTO.getId(), scheduleUpdateDTO)).isExactlyInstanceOf(LoginException.class);
@@ -79,7 +87,8 @@ class ScheduleControllerTest {
         assertThatThrownBy(() -> scheduleController.deleteSchedule(scheduleResponseDTO.getId(), scheduleDeleteDTO)).isExactlyInstanceOf(LoginException.class);
 
         scheduleDeleteDTO.setPassword("123456");
-        scheduleController.deleteSchedule(scheduleResponseDTO.getId(), scheduleDeleteDTO);
+        ResponseEntity<Void> voidResponseEntity = scheduleController.deleteSchedule(scheduleResponseDTO.getId(), scheduleDeleteDTO);
+        assertThat(voidResponseEntity.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
 
         assertThatThrownBy(() -> scheduleController.getSchedule(scheduleResponseDTO.getId())).isExactlyInstanceOf(NotExistException.class);
     }
