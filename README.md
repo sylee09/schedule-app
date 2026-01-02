@@ -47,3 +47,6 @@ https://documenter.getpostman.com/view/37347999/2sBXVcjsLU
   - 변환된 댓글ResponseDTO를 포함하는 일정ResponseDTO를 반환하도록 구현
 - 유저의 입력에 대한 검증 수행
   - 입력 검증을 용이하게 하기 위해 BeanValidation을 사용
+
+### 트러블 슈팅
+https://velog.io/@sy99/%EC%9D%BC%EC%A0%95-%EA%B4%80%EB%A6%AC-%EC%95%B1
