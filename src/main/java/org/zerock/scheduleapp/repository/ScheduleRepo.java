@@ -10,4 +10,7 @@ import java.util.List;
 public interface ScheduleRepo extends JpaRepository<Schedule, Long> {
     @Query("select s from Schedule s where s.author like :name order by s.updatedAt desc")
     List<Schedule> findByAuthor(@Param("name") String name);
+
+    @Query("select s from Schedule s order by s.updatedAt desc")
+    List<Schedule> findAll();
 }
