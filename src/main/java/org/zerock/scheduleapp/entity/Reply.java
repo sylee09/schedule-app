@@ -19,7 +19,7 @@ public class Reply extends BaseEntity {
     private String author;
     private String password;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn
     private Schedule schedule;
 
