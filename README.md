@@ -8,6 +8,21 @@ https://documenter.getpostman.com/view/37347999/2sBXVcjsLU
 ### ERD
 ![erd](erd.png)
 
+### 실행 결과
+![result1](result1.png)
+![result2](result2.png)
+![result3](result3.png)
+![result4](result4.png)
+![result5](result5.png)
+![result6](result6.png)
+![result7](result7.png)
+![result8](result8.png)
+![result9](result9.png)
+![result10](result10.png)
+![result11](result11.png)
+![result12](result12.png)
+
+
 ### 구현 사항
 - 일정 생성
   - JPA Auditing을 활용하여 작성일, 수정일 필드 자동으로 변경
